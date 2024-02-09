@@ -20,11 +20,12 @@ export class CurrencyMaskDirective implements OnInit {
   private _decimalsWatcher = inject(DecimalWatcherService);
   private _destroyRef = inject(DestroyRef);
 
-  defaultValue = '000';
-  isTouched?: boolean;
+  private defaultValue = '000';
   public el = inject(ElementRef);
   public renderer = inject(Renderer2);
   @Input() decimals = 2;
+  private allowedKeys = ['Backspace', 'Enter', 'Escape', 'Tab'];
+  private numericPattern = /[0-9]/;
 
   constructor() {}
 
@@ -34,28 +35,37 @@ export class CurrencyMaskDirective implements OnInit {
     this.currencyFormat(this.el.nativeElement.value);
   }
 
-  @HostListener('focus', ['$event.target.value']) touched(e: string) {
-    this.isTouched = true;
-    this.currencyFormat(e);
+  @HostListener('focus', ['$event.target']) touched(t: EventTarget) {
+    if (!(t instanceof HTMLInputElement)) return;
+    this.setSelectionRange();
   }
-  @HostListener('blur', ['$event.target.value']) clear(e: string) {
-    if (e === '0.00') {
-      this.isTouched = false;
-      this.renderer.setProperty(this.el.nativeElement, 'value', '');
+
+  @HostListener('click', ['$event.target']) blur(t: EventTarget) {
+    if (!(t instanceof HTMLInputElement)) return;
+    this.setSelectionRange();
+  }
+
+  @HostListener('keydown', ['$event']) keydown(e: KeyboardEvent) {
+    if (!(e.target instanceof HTMLInputElement)) return;
+    if (!this.numericPattern.test(e.key) && !this.allowedKeys.includes(e.key)) {
+      e.preventDefault();
+      return;
     }
   }
 
-  @HostListener('input', ['$event.target.value']) onInput(e: string) {
-    this.currencyFormat(e);
+  @HostListener('input', ['$event.target']) onInput(t: EventTarget) {
+    if (!(t instanceof HTMLInputElement)) return;
+    this.currencyFormat(t.value);
   }
 
-  @HostListener('paste', ['$event']) onPaste(event: ClipboardEvent) {
-    event.preventDefault();
-    this.currencyFormat(event.clipboardData!.getData('text/plain'));
+  @HostListener('paste', ['$event']) onPaste(e: ClipboardEvent) {
+    e.preventDefault();
+    if (!(e.target instanceof HTMLInputElement) || !e.clipboardData) return;
+    this.currencyFormat(e.clipboardData.getData('text/plain'));
   }
 
   private currencyFormat(value: string) {
-    value = !value.length && this.isTouched ? this.defaultValue : value;
+    value = !value.length ? this.defaultValue : value;
     value = this.removeZero([...value]);
     value = this.addZero([...value]);
     value = value.replace(/\D/g, '');
@@ -74,7 +84,7 @@ export class CurrencyMaskDirective implements OnInit {
     ).join('');
 
   private addZero = (value: string[]) =>
-    (value.filter((e) => e !== '.' && e !== ',').length < 3 && this.isTouched
+    (value.filter((e) => e !== '.' && e !== ',').length < 3
       ? ['0', ...value]
       : value
     ).join('');
@@ -115,5 +125,10 @@ export class CurrencyMaskDirective implements OnInit {
         takeUntilDestroyed(this._destroyRef)
       )
       .subscribe();
+  }
+
+  private setSelectionRange() {
+    const lastIndex = this.el.nativeElement.value.length;
+    this.el.nativeElement.setSelectionRange(lastIndex, lastIndex);
   }
 }
