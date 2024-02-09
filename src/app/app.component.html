@@ -86,11 +86,23 @@
   <main>
     <h1 class="transition-colors">Currency Mask Directive</h1>
 
+    <label [formGroup]="form">
+      <span>Custom Decimals:</span>
+
+      <input
+        type="number"
+        class="transition-colors"
+        formControlName="decimals"
+        min="1"
+      />
+    </label>
+
     <input
       type="text"
       class="transition-colors"
       appCurrencyMask
       [value]="initialValue"
+      [decimals]="decimals() || 2"
     />
   </main>
 
