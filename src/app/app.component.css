@@ -1,0 +1,124 @@
+.bg-gradient {
+  position: absolute;
+  height: 100dvh;
+  width: 100dvw;
+}
+
+.bg-gradient::before,
+.bg-gradient::after {
+  content: "";
+  position: absolute;
+  height: 500px;
+  width: 500px;
+  background-image: var(--gradient);
+  border-radius: 50%;
+}
+
+.bg-gradient::before {
+  bottom: 0;
+  left: -20%;
+  right: 0;
+  top: -10%;
+}
+
+.bg-gradient::after {
+  bottom: 0;
+  right: -20%;
+  top: -10%;
+}
+
+.app-container {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 6rem 1fr 6rem;
+  place-content: center;
+  gap: 1rem;
+  height: 100svh;
+  width: min(800px, 100%);
+  margin: auto;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  padding: 0 1rem;
+}
+
+button {
+  display: grid;
+  place-content: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  border: 2px solid var(--color);
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  justify-items: center;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  text-wrap: balance;
+}
+
+input {
+  width: min(300px, 90%);
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  text-align: right;
+  border-radius: 0.5rem;
+  border-color: var(--color);
+  outline: none;
+  background-color: transparent;
+  color: inherit;
+}
+
+input:focus {
+  box-shadow: 0 0 4px 2px var(--color);
+}
+
+footer {
+  display: grid;
+  place-content: center;
+
+  :is(a) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+
+    :is(span) {
+      align-self: flex-end;
+    }
+  }
+}
+
+svg {
+  fill: var(--color);
+}
+
+@media (hover) {
+  button:hover,
+  a:hover {
+    filter: drop-shadow(0 0 0.25rem var(--color));
+  }
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}

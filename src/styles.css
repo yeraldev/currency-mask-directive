@@ -1,1 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: rgb(241 245 249);
+  --color: rgb(2 6 23);
+  --gradient: radial-gradient(
+    farthest-side,
+    rgb(255 0 182 / 0.35),
+    rgb(241 245 249 / 0)
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  .dark {
+    --bg: rgb(2 6 23);
+    --color: rgb(241 245 249);
+    --gradient: radial-gradient(
+      farthest-side,
+      rgb(255 0 182 / 0.15),
+      rgb(241 245 249 / 0)
+    );
+  }
+}
+
+html,
+body {
+  position: relative;
+  height: 100dvh;
+  background-color: var(--bg);
+  color: var(--color);
+  font-family: "Inter", sans-serif;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
