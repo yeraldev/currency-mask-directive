@@ -129,7 +129,7 @@ label {
   align-items: center;
   width: min(300px, 90%);
 
-  input {
+  :is(input) {
     width: 5rem;
   }
 }
