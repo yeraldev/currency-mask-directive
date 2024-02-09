@@ -30,7 +30,7 @@
 html,
 body {
   position: relative;
-  height: 100dvh;
+  height: max(100dvh, 100%);
   background-color: var(--bg);
   color: var(--color);
   font-family: "Inter", sans-serif;
